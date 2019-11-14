@@ -1,0 +1,43 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #09d3ac;
+}
+
+abbr {
+  font-size: 25px;
+}
+
+.react-calendar__month-view__weekdays {
+  font-size: 1.75em;
+}
+
+.react-calendar {
+  width: 75% !important;
+  margin: 0 auto;
+}
+
+.react-calendar__navigation button {
+font-size: 35px;
+}
+
+.content {
+  border: 1px solid red;
+}
