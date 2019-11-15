@@ -24,6 +24,9 @@ export default class App extends Component {
   }
 
   getEvents2 = () => {
+    this.setState({
+      events: [],
+    })
       if (this.state.promise.length !== 0){
       var promise = this.state.promise;
       promise.map((event, i) => {
@@ -37,7 +40,6 @@ export default class App extends Component {
           )
           return(event)
         })
-        console.log(this.state)
     } else { setTimeout(this.componentDidMount, 2000);}}
 
   saveEvent = async (event) => {
@@ -86,7 +88,7 @@ export default class App extends Component {
 
  renderPage =  () => {
     return (
-      <Page saveNew={this.saveEvent} update={this.updateEvent} delete={this.deleteEvent} />
+      <Page myEvents={this.state.events} saveNew={this.saveEvent} update={this.updateEvent} delete={this.deleteEvent} />
     )
   }
 
