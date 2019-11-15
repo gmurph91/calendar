@@ -1,51 +1,32 @@
-import React, {Component} from 'react';
-import Calendar from 'react-calendar'
-export default class Page extends Component {
-    
-        state = {
-            date: new Date(),
-            months: [],
-            days: [],
-        }
+import React, { Component } from "react";
+import {
+    Calendar,
+    momentLocalizer,
+  } from 'react-big-calendar';
+import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
-      onChange = value => this.setState({ value })
+const localizer = momentLocalizer(moment)
 
-      mapEvents = (date) => {
-        let events = this.props.events
-        events.map((eventy, i) => {
-        let event = this.props.events[i].date
-        let eventMonth = new Date(event).getMonth()
-        let eventDay = new Date(event).getDate()
-        let month = new Date(date.date).getMonth()
-        let day = new Date(date.date).getDate()
-        console.log(events)
-        if(month === eventMonth && day === eventDay) {console.log("It's a match!")}
-        return eventy
-      }
-      
-      )
-    
+class Page extends Component {
+  state = {
+    events: []
+  };
+
+
+  render() {
+    return (
+      <div className="App">
+        <Calendar
+          localizer={localizer}
+          defaultDate={new Date()}
+          defaultView="month"
+          events={this.state.events}
+          style={{ height: "100vh" }}
+        />
+      </div>
+    );
   }
+}
 
-      mapEvents2 = (date) => {
-          try{
-        
-        // const tileContent = ({ date, view }) => view === 'month' && date.getDate() === 13 ? <p>Event : Work is so fun</p> : null;
-          } catch(e){
-              console.log(e)
-          }
-    }
-
-      render (){
-        
-        return (
-            <div>
-            <Calendar
-              onChange={this.onChange}
-              value={this.state.date}
-              tileContent={this.mapEvents}
-            />
-            <div><button onClick={this.mapEvents}>Update</button></div>    
-            </div>
-              )}
-    }
+export default Page;

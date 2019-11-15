@@ -2,29 +2,43 @@ import React, {Component} from 'react';
 import './App.css';
 import Page from './pages/page'
 import { Route } from 'react-router-dom' 
-
 export default class App extends Component {
   state = {
     events: [],
-    fetched: false,
   }
 
   componentDidMount() {
     this.getEvents()
-    this.setState({
-      fetched: true,
-    })
   }
 
   getEvents = async () => {
     try {
       const promise = await fetch(`https://gregcalendarapi.herokuapp.com/get`)
       this.setState({
-        events: await promise.json()
+        promise: await promise.json()
       })
     } catch (e) {
       console.log(e)
-    }}
+    }
+    this.getEvents2()
+  }
+
+  getEvents2 = () => {
+      if (this.state.promise.length !== 0){
+      var promise = this.state.promise;
+      promise.map((event, i) => {
+      const date = promise[i].date;
+      const title = promise[i].title;
+      const description = promise[i].description;
+      var Array = [{ start : date , end : date , title : title , description : description}]
+      this.setState(prevState => ({
+          events: [ ...this.state.events, ...Array ]
+        })
+          )
+          return(event)
+        })
+        console.log(this.state)
+    } else { setTimeout(this.componentDidMount, 2000);}}
 
   saveEvent = async (event) => {
     try {
@@ -72,7 +86,7 @@ export default class App extends Component {
 
  renderPage =  () => {
     return (
-      <Page fetched ={this.state.fetched} events={this.state.events} saveNew={this.saveEvent} update={this.updateEvent} delete={this.deleteEvent} />
+      <Page saveNew={this.saveEvent} update={this.updateEvent} delete={this.deleteEvent} />
     )
   }
 
