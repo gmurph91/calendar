@@ -2,6 +2,9 @@
   "name": "calendar",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "10.16.3"
+  },
   "dependencies": {
     "@fullcalendar/core": "^4.3.1",
     "@fullcalendar/daygrid": "^4.3.0",
