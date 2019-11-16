@@ -89,3 +89,8 @@ button {
 input[type=text] {
   width: 100%;
 }
+
+.below {
+  display: block;
+  margin-top: 100px;
+}
