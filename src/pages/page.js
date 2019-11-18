@@ -22,6 +22,7 @@ class Page extends Component {
     start: "",
     end: "",
     type: "",
+    open: false
   };
   this.handleSubmit= this.handleSubmit.bind(this);
 }
@@ -89,42 +90,16 @@ eventStyleGetter = (event) => {
 }
 
 eventSelected = (event) => {
-  try{
-  if(event.id === "5dd2e29828b9a80017fe4701"){
-    console.log(event.id)
-  return(
-  <Popup
-        open
-        modal
-      >
-        <span>
-        <form onSubmit={this.handleSubmit}>
-        <label>Title
-          <input type="text" ref={el => this.element = el} />
-        </label>
-        <label>Description
-          <input type="text" ref={el2 => this.element2 = el2} />
-        </label>
-        <label>Start date
-          <input type="text" ref={el3 => this.element3 = el3} />
-        </label>
-        <label>End date
-          <input type="text" ref={el4 => this.element4 = el4} />
-        </label>
-        <label>Event type
-          <input type="text" ref={el5 => this.element5 = el5} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-        </span>
-      </Popup>
-  )}} catch(e){ console.log(e)}}
+    console.log(event)
+    this.setState({
+      open: true,
+    })
+  }
 
   render() {
     let myEvents = this.props.myEvents
     
     const Modal = () => (
-      <div>
       <Popup
         trigger={<button className="newEvent">New Event</button>}
         modal
@@ -150,8 +125,34 @@ eventSelected = (event) => {
       </form>
         </span>
       </Popup>
-      </div>
     );
+    const UpdateModal = () => (
+    <Popup
+        open = {this.state.open}
+        modal
+      >
+        <span>
+        <form onSubmit={this.handleSubmit}>
+        <label>Title
+          <input type="text" ref={el => this.element = el} />
+        </label>
+        <label>Description
+          <input type="text" ref={el2 => this.element2 = el2} />
+        </label>
+        <label>Start date
+          <input type="text" ref={el3 => this.element3 = el3} />
+        </label>
+        <label>End date
+          <input type="text" ref={el4 => this.element4 = el4} />
+        </label>
+        <label>Event type
+          <input type="text" ref={el5 => this.element5 = el5} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+        </span>
+      </Popup>
+    )
     return (
       <div className="main">
           <Modal />
@@ -172,7 +173,7 @@ eventSelected = (event) => {
           eventPropGetter={(this.eventStyleGetter)}
           tooltipAccessor={"tooltip"}
         />
-        {this.eventSelected()}
+        <UpdateModal />
       </div>
     );
   }
