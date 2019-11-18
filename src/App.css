@@ -66,23 +66,23 @@ button {
 
 .listView {
   position: absolute;
-  top: 6px;
-    right: 6px;
+  top: 0px;
+    right: 0px;
 }
 
 .newEvent {
   position: absolute;
-  top: 6px;
-  right: 86px;
+  top: 0px;
+  right: 88px;
 }
 .calendarHeader button:nth-of-type(1) {
   position: absolute;
-  top: 6px;
-  left: 6px;
+  top: 0px;
+  left: 0px;
 }
 .calendarHeader button:nth-of-type(2) {
   position: absolute;
-  top: 6px;
+  top: 0px;
   left: 86px;
 }
 
@@ -93,4 +93,7 @@ input[type=text] {
 .below {
   display: block;
   margin-top: 100px;
+}
+label {
+  display: block;
 }

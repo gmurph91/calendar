@@ -30,10 +30,13 @@ export default class App extends Component {
       if (this.state.promise.length !== 0){
       var promise = this.state.promise;
       promise.map((event, i) => {
-      const date = promise[i].date;
       const title = promise[i].title;
       const description = promise[i].description;
-      var Array = [{ start : date , end : date , title : title , description : description}]
+      const start = promise[i].start;
+      const end = promise[i].end;
+      const type = promise[i].type;
+      const id = promise[i]._id;
+      var Array = [{ start : start , end : end , title : title , description : description, type : type, id : id }]
       this.setState(prevState => ({
           events: [ ...this.state.events, ...Array ]
         })

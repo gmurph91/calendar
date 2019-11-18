@@ -11,21 +11,29 @@ import Popup from "reactjs-popup";
 const localizer = momentLocalizer(moment)
 
 class Page extends Component {
-  state = {
+  constructor(props) {
+    super(props);
+  this.state = {
     view: "month",
     date: new Date(),
     events: [],
     title: "",
     description: "",
-    eventDate: "",
+    start: "",
+    end: "",
     type: "",
   };
+  this.handleSubmit= this.handleSubmit.bind(this);
+}
 
-  addEvent = () => {
+  addEvent = async (event) => {
+    await(this.setState({event}))
+    console.log(this.state)
     this.props.saveNew({
       title:this.state.title, 
       description:this.state.description, 
-      date:new Date(this.state.eventDate),
+      start:new Date(this.state.start),
+      end:new Date(this.state.end),
       type:this.state.type
     })}
 
@@ -36,49 +44,113 @@ toggleView = () => {
     this.setState({ view:"month" })
   }
 }
-  
+handleSubmit(event) {
+  event.preventDefault();
+  this.setState({ 
+    title: this.element.value, 
+    description: this.element2.value,
+    start: this.element3.value, 
+    end: this.element4.value, 
+    type: this.element5.value,  
+  });
+  this.addEvent(event)
+}
+
+eventStyleGetter = (event) => {
+  if (event.type === "Appointment"){
+  var style = {
+      backgroundColor: '#CC3546'
+  };
+  return {
+      style: style
+  };
+} if (event.type === "Meeting"){
+  var style2 = {
+      backgroundColor: '#00A9A5'
+  };
+  return {
+      style: style2
+  };
+} if (event.type === "Reminder"){
+  var style3 = {
+      backgroundColor: '#FFBA49'
+  };
+  return {
+      style: style3
+  };
+} if (event.type === "Task"){
+  var style4 = {
+      backgroundColor: '#7FB069'
+  };
+  return {
+      style: style4
+  };
+}
+}
+
+eventSelected = (event) => {
+  try{
+  if(event.id === "5dd2e29828b9a80017fe4701"){
+    console.log(event.id)
+  return(
+  <Popup
+        open
+        modal
+      >
+        <span>
+        <form onSubmit={this.handleSubmit}>
+        <label>Title
+          <input type="text" ref={el => this.element = el} />
+        </label>
+        <label>Description
+          <input type="text" ref={el2 => this.element2 = el2} />
+        </label>
+        <label>Start date
+          <input type="text" ref={el3 => this.element3 = el3} />
+        </label>
+        <label>End date
+          <input type="text" ref={el4 => this.element4 = el4} />
+        </label>
+        <label>Event type
+          <input type="text" ref={el5 => this.element5 = el5} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+        </span>
+      </Popup>
+  )}} catch(e){ console.log(e)}}
 
   render() {
     let myEvents = this.props.myEvents
+    
     const Modal = () => (
+      <div>
       <Popup
         trigger={<button className="newEvent">New Event</button>}
         modal
-        closeOnDocumentClick = {false}
-        closeOnEscape = {false}
-        backdrop="static"
-        keyboard={ false }
       >
         <span>
-        <form>
-            <label htmlFor="title">Title:</label>
-            <input id="title" type="text" value={this.state.title} onChange={(event)=>{
-              this.setState({
-                title: event.target.value
-              })
-            }}/>
-            <label htmlFor="description">Description:</label>
-            <input id="description" type="text" value={this.state.description} onChange={(event)=>{
-              this.setState({
-                description: event.target.value
-              })
-            }}/>
-            <label htmlFor="date">Date:</label>
-            <input id="date" type="text" value={this.state.eventDate} onChange={(event)=>{
-              this.setState({
-                eventDate: event.target.value
-              })
-            }}/>
-            <label htmlFor="type">Type:</label>
-            <input id="type" type="text" value={this.state.type} onChange={(event)=>{
-              this.setState({
-                type: event.target.value
-              })
-            }}/>
-            <input type="button" onClick={this.addEvent} value="Submit"/>
-            </form>
+        <form onSubmit={this.handleSubmit}>
+        <label>Title
+          <input type="text" ref={el => this.element = el} />
+        </label>
+        <label>Description
+          <input type="text" ref={el2 => this.element2 = el2} />
+        </label>
+        <label>Start date
+          <input type="text" ref={el3 => this.element3 = el3} />
+        </label>
+        <label>End date
+          <input type="text" ref={el4 => this.element4 = el4} />
+        </label>
+        <label>Event type
+          <input type="text" ref={el5 => this.element5 = el5} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
         </span>
       </Popup>
+      </div>
     );
     return (
       <div className="main">
@@ -96,32 +168,12 @@ toggleView = () => {
           date={this.state.date}
           onNavigate={date => this.setState({ date })}
           style={{ height: "93.5vh" }}
+          onSelectEvent={(this.eventSelected)}
+          eventPropGetter={(this.eventStyleGetter)}
+          tooltipAccessor={"tooltip"}
         />
-        <div className="below"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-  Launch demo modal
-</button>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        {this.eventSelected()}
       </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div></div>
-      </div>
-      
     );
   }
 }
