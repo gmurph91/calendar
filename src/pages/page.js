@@ -27,17 +27,6 @@ class Page extends Component {
   this.handleSubmit= this.handleSubmit.bind(this);
 }
 
-  addEvent = async (event) => {
-    await(this.setState({event}))
-    console.log(this.state)
-    this.props.saveNew({
-      title:this.state.title, 
-      description:this.state.description, 
-      start:new Date(this.state.start),
-      end:new Date(this.state.end),
-      type:this.state.type
-    })}
-
 toggleView = () => {
   if(this.state.view === "month"){
     this.setState({ view: "agenda" })
@@ -45,6 +34,8 @@ toggleView = () => {
     this.setState({ view:"month" })
   }
 }
+
+
 handleSubmit(event) {
   event.preventDefault();
   this.setState({ 
@@ -56,6 +47,40 @@ handleSubmit(event) {
   });
   this.addEvent(event)
 }
+addEvent = async (event) => {
+  await(this.setState({event}))
+  this.props.saveNew({
+    title:this.state.title, 
+    description:this.state.description, 
+    start:new Date(this.state.start),
+    end:new Date(this.state.end),
+    type:this.state.type
+  })}
+
+
+handleUpdate(event) {
+  event.preventDefault();
+  console.log(event)
+  // event.preventDefault();
+  // this.setState({ 
+  //   title: this.element.value, 
+  //   description: this.element2.value,
+  //   start: this.element3.value, 
+  //   end: this.element4.value, 
+  //   type: this.element5.value,  
+  // });
+  // this.updateEvent(event)
+}
+updateEvent = async (event) => {
+  await(this.setState({event}))
+  this.props.saveNew({
+    id:this.state.id,
+    title:this.state.title, 
+    description:this.state.description, 
+    start:new Date(this.state.start),
+    end:new Date(this.state.end),
+    type:this.state.type
+  })}
 
 eventStyleGetter = (event) => {
   if (event.type === "Appointment"){
@@ -90,9 +115,14 @@ eventStyleGetter = (event) => {
 }
 
 eventSelected = (event) => {
-    console.log(event)
     this.setState({
       open: true,
+      title: event.title,
+      description: event.description,
+      start: event.start,
+      end: event.end,
+      type: event.type,
+      id: event.id
     })
   }
 
@@ -132,23 +162,24 @@ eventSelected = (event) => {
         modal
       >
         <span>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleUpdate}>
         <label>Title
-          <input type="text" ref={el => this.element = el} />
+          <input type="text" defaultValue = {this.state.title} ref={el => this.element = el} />
         </label>
         <label>Description
-          <input type="text" ref={el2 => this.element2 = el2} />
+          <input type="text" defaultValue = {this.state.description} ref={el2 => this.element2 = el2} />
         </label>
         <label>Start date
-          <input type="text" ref={el3 => this.element3 = el3} />
+          <input type="text" defaultValue = {this.state.start} ref={el3 => this.element3 = el3} />
         </label>
         <label>End date
-          <input type="text" ref={el4 => this.element4 = el4} />
+          <input type="text" defaultValue = {this.state.end} ref={el4 => this.element4 = el4} />
         </label>
         <label>Event type
-          <input type="text" ref={el5 => this.element5 = el5} />
+          <input type="text" defaultValue = {this.state.type} ref={el5 => this.element5 = el5} />
         </label>
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Update" />
+        <input type="button" value="Delete" />
       </form>
         </span>
       </Popup>
@@ -192,8 +223,6 @@ class CustomToolbar extends Toolbar {
   }
 
   navigate = action => {
-    console.log(action);
-    
     this.props.onNavigate(action)
   }
 }
