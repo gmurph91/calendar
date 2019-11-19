@@ -22,9 +22,12 @@ class Page extends Component {
     start: "",
     end: "",
     type: "",
-    open: false
+    open: false,
+    open2: false,
   };
   this.handleSubmit= this.handleSubmit.bind(this);
+  this.handleUpdate= this.handleUpdate.bind(this);
+  this.handleSelect= this.handleSelect.bind(this);
 }
 
 toggleView = () => {
@@ -35,6 +38,13 @@ toggleView = () => {
   }
 }
 
+handleSelect = ({start,end}) => {
+  this.setState({
+    open2: true,
+    start: start,
+    end: end,
+  })
+}
 
 handleSubmit(event) {
   event.preventDefault();
@@ -43,7 +53,9 @@ handleSubmit(event) {
     description: this.element2.value,
     start: this.element3.value, 
     end: this.element4.value, 
-    type: this.element5.value,  
+    type: event.target[4].value,
+    open: false,
+    open2: false,
   });
   this.addEvent(event)
 }
@@ -60,20 +72,23 @@ addEvent = async (event) => {
 
 handleUpdate(event) {
   event.preventDefault();
-  console.log(event)
-  // event.preventDefault();
-  // this.setState({ 
-  //   title: this.element.value, 
-  //   description: this.element2.value,
-  //   start: this.element3.value, 
-  //   end: this.element4.value, 
-  //   type: this.element5.value,  
-  // });
-  // this.updateEvent(event)
-}
+  try{
+  this.setState({ 
+    title: event.target[0].value, 
+    description: event.target[1].value,
+    start: event.target[2].value, 
+    end: event.target[3].value, 
+    type: event.target[4].value, 
+    open: false,
+    open2: false
+  });
+  this.updateEvent(event)
+} catch(e){
+  console.log(e)
+}}
 updateEvent = async (event) => {
   await(this.setState({event}))
-  this.props.saveNew({
+  this.props.update({
     id:this.state.id,
     title:this.state.title, 
     description:this.state.description, 
@@ -81,6 +96,15 @@ updateEvent = async (event) => {
     end:new Date(this.state.end),
     type:this.state.type
   })}
+
+  deleteEvent = () => {
+    let id=this.state.id;
+    this.props.delete(id)
+    this.setState({ 
+      open: false,
+      open2: false,
+    });
+  }
 
 eventStyleGetter = (event) => {
   if (event.type === "Appointment"){
@@ -126,6 +150,13 @@ eventSelected = (event) => {
     })
   }
 
+  reset = () =>{
+    this.setState({
+      open: false,
+      open2: false
+    })
+  }
+
   render() {
     let myEvents = this.props.myEvents
     
@@ -133,6 +164,7 @@ eventSelected = (event) => {
       <Popup
         trigger={<button className="newEvent">New Event</button>}
         modal
+        onClose={this.reset}
       >
         <span>
         <form onSubmit={this.handleSubmit}>
@@ -148,9 +180,49 @@ eventSelected = (event) => {
         <label>End date
           <input type="text" ref={el4 => this.element4 = el4} />
         </label>
-        <label>Event type
-          <input type="text" ref={el5 => this.element5 = el5} />
+        <label>Event Type
+        <select>
+            <option value="Appointment">Appointment</option>
+            <option value="Reminder">Reminder</option>
+            <option value="Meeting">Meeting</option>
+            <option value="Task">Task</option>
+            <option value="Other">Other</option>
+          </select>
+          </label>
+        <input type="submit" value="Submit" />
+      </form>
+        </span>
+      </Popup>
+    );
+    const Modal2 = () => (
+      <Popup
+        open = {this.state.open2}
+        modal
+        onClose={this.reset}
+      >
+        <span>
+        <form onSubmit={this.handleSubmit}>
+        <label>Title
+          <input type="text" ref={el => this.element = el} />
         </label>
+        <label>Description
+          <input type="text" ref={el2 => this.element2 = el2} />
+        </label>
+        <label>Start date
+          <input type="text" defaultValue = {this.state.start} ref={el3 => this.element3 = el3} />
+        </label>
+        <label>End date
+          <input type="text" defaultValue = {this.state.end} ref={el4 => this.element4 = el4} />
+        </label>
+        <label>Event Type
+        <select>
+            <option value="Appointment">Appointment</option>
+            <option value="Reminder">Reminder</option>
+            <option value="Meeting">Meeting</option>
+            <option value="Task">Task</option>
+            <option value="Other">Other</option>
+          </select>
+          </label>
         <input type="submit" value="Submit" />
       </form>
         </span>
@@ -160,6 +232,7 @@ eventSelected = (event) => {
     <Popup
         open = {this.state.open}
         modal
+        onClose={this.reset}
       >
         <span>
         <form onSubmit={this.handleUpdate}>
@@ -175,11 +248,17 @@ eventSelected = (event) => {
         <label>End date
           <input type="text" defaultValue = {this.state.end} ref={el4 => this.element4 = el4} />
         </label>
-        <label>Event type
-          <input type="text" defaultValue = {this.state.type} ref={el5 => this.element5 = el5} />
-        </label>
+        <label>Event Type
+        <select>
+            <option value="Appointment">Appointment</option>
+            <option value="Reminder">Reminder</option>
+            <option value="Meeting">Meeting</option>
+            <option value="Task">Task</option>
+            <option value="Other">Other</option>
+          </select>
+          </label>
         <input type="submit" value="Update" />
-        <input type="button" value="Delete" />
+        <input type="button" value="Delete" onClick={this.deleteEvent}/>
       </form>
         </span>
       </Popup>
@@ -203,8 +282,11 @@ eventSelected = (event) => {
           onSelectEvent={(this.eventSelected)}
           eventPropGetter={(this.eventStyleGetter)}
           tooltipAccessor={"tooltip"}
+          onSelectSlot={this.handleSelect}
+          selectable
         />
         <UpdateModal />
+        <Modal2 />
       </div>
     );
   }

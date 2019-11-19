@@ -89,6 +89,10 @@ button {
 input[type=text] {
   width: 100%;
 }
+select {
+  display: block;
+  width: 100%;
+}
 
 .below {
   display: block;

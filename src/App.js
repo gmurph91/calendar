@@ -74,13 +74,10 @@ export default class App extends Component {
     }
   }
 
-  deleteEvent = async (event) => {
+  deleteEvent = async (id) => {
     try {
-      let id = event.id
       const update = await fetch(`https://gregcalendarapi.herokuapp.com/delete/${id}`, {
-        method: 'DELETE',
-        body: JSON.stringify(event),
-        headers: { 'Content-Type': 'application/JSON', },
+        method: 'DELETE'
       })
       await update
       this.getEvents()
